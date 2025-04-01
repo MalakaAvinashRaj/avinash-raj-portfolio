@@ -4,11 +4,14 @@ import FileExplorer from '@/components/FileExplorer';
 import Editor from '@/components/Editor';
 import Terminal from '@/components/Terminal';
 import { fileContents } from '@/data/fileContents';
+import { ChevronLeft, ChevronRight, Minimize, Maximize } from 'lucide-react';
 
 const Index = () => {
   const [selectedFile, setSelectedFile] = useState<string | null>(null);
   const [fileContent, setFileContent] = useState<string>('');
   const [currentDir, setCurrentDir] = useState<string>('home');
+  const [sidebarVisible, setSidebarVisible] = useState(true);
+  const [terminalMinimized, setTerminalMinimized] = useState(false);
 
   useEffect(() => {
     if (selectedFile && fileContents[selectedFile]) {
@@ -18,6 +21,14 @@ const Index = () => {
 
   const handleFileSelect = (filePath: string) => {
     setSelectedFile(filePath);
+  };
+
+  const toggleSidebar = () => {
+    setSidebarVisible(!sidebarVisible);
+  };
+
+  const toggleTerminal = () => {
+    setTerminalMinimized(!terminalMinimized);
   };
 
   const handleCommand = (command: string): string => {
@@ -172,10 +183,33 @@ const Index = () => {
       </div>
       
       {/* Main content */}
-      <div className="flex flex-1 overflow-hidden">
+      <div className="flex flex-1 overflow-hidden relative">
+        {/* Sidebar toggle button - visible when sidebar is collapsed */}
+        {!sidebarVisible && (
+          <button 
+            onClick={toggleSidebar}
+            className="absolute left-0 top-4 z-20 bg-vscode-sidebar p-1 rounded-r-md border-r border-t border-b border-vscode-border"
+            aria-label="Show sidebar"
+          >
+            <ChevronRight size={18} />
+          </button>
+        )}
+        
         {/* File Explorer */}
-        <div className="w-64 h-full">
-          <FileExplorer onFileSelect={handleFileSelect} selectedFile={selectedFile} />
+        <div className={`${sidebarVisible ? 'w-64' : 'w-0'} transition-all duration-300 h-full relative`}>
+          {sidebarVisible && (
+            <>
+              <FileExplorer onFileSelect={handleFileSelect} selectedFile={selectedFile} />
+              {/* Sidebar collapse button */}
+              <button 
+                onClick={toggleSidebar}
+                className="absolute right-0 top-4 z-10 bg-vscode-sidebar p-1 rounded-l-md border-l border-t border-b border-vscode-border"
+                aria-label="Hide sidebar"
+              >
+                <ChevronLeft size={18} />
+              </button>
+            </>
+          )}
         </div>
         
         {/* Editor */}
@@ -185,11 +219,30 @@ const Index = () => {
       </div>
       
       {/* Terminal */}
-      <div className="h-1/4">
-        <Terminal 
-          onCommand={handleCommand} 
-          initialCommands={['help']}
-        />
+      <div className={`relative ${terminalMinimized ? 'h-8' : 'h-1/4'} transition-all duration-300`}>
+        {terminalMinimized ? (
+          <div 
+            onClick={toggleTerminal}
+            className="h-full bg-vscode-terminal border-t border-vscode-border p-2 cursor-pointer flex items-center"
+          >
+            <span className="text-gray-400">Terminal</span>
+            <Maximize size={14} className="ml-2" />
+          </div>
+        ) : (
+          <>
+            <button 
+              onClick={toggleTerminal} 
+              className="absolute right-4 top-2 z-10 text-gray-400 hover:text-white"
+              aria-label="Minimize terminal"
+            >
+              <Minimize size={14} />
+            </button>
+            <Terminal 
+              onCommand={handleCommand} 
+              initialCommands={['help']}
+            />
+          </>
+        )}
       </div>
     </div>
   );
