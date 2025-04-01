@@ -58,32 +58,43 @@ const Index = () => {
   const listDirectory = (dirPath: string): string => {
     const normalizedPath = dirPath.startsWith('/') ? dirPath.substring(1) : dirPath;
     
-    // Get all files and directories in the path
-    const items = Object.keys(fileContents)
-      .filter(path => {
-        // Remove the path prefix to get relative paths
-        const relativePath = path.startsWith(normalizedPath) ? 
-          path.substring(normalizedPath.length) : 
-          path;
-        
-        // Check if this is a direct child of the requested directory
-        return path.startsWith(normalizedPath) && 
-          relativePath.startsWith('/') && 
-          relativePath.substring(1).split('/').length <= 1;
-      })
-      .map(path => {
-        const parts = path.split('/');
-        const relativeParts = path.substring(normalizedPath.length).split('/').filter(p => p);
-        const isDirectory = relativeParts.length > 1;
-        return relativeParts[0] + (isDirectory ? '/' : '');
-      })
-      .filter((value, index, self) => self.indexOf(value) === index); // Remove duplicates
+    // Create a set to track unique directory names
+    const dirSet = new Set<string>();
+    // Create a set to track unique file names
+    const fileSet = new Set<string>();
     
-    if (items.length === 0) {
+    Object.keys(fileContents).forEach(path => {
+      // Check if path is directly in this directory or a subdirectory
+      if (path.startsWith(normalizedPath) && path !== normalizedPath) {
+        // Get the relative path from the current directory
+        const relativePath = path.substring(normalizedPath.length);
+        
+        // Skip if not a direct child (doesn't start with /)
+        if (!relativePath.startsWith('/')) return;
+        
+        // Get the first segment after the current directory
+        const segments = relativePath.substring(1).split('/');
+        const firstSegment = segments[0];
+        
+        if (segments.length > 1) {
+          // This is a directory
+          dirSet.add(firstSegment);
+        } else if (segments.length === 1 && firstSegment) {
+          // This is a file
+          fileSet.add(firstSegment);
+        }
+      }
+    });
+    
+    if (dirSet.size === 0 && fileSet.size === 0) {
       return `No such directory: ${dirPath}`;
     }
     
-    return items.join('\n');
+    // Format the output with directories first, then files
+    const dirs = Array.from(dirSet).map(dir => `${dir}/`);
+    const files = Array.from(fileSet);
+    
+    return [...dirs, ...files].join('\n');
   };
 
   const changeDirectory = (dirPath: string): string => {
