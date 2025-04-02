@@ -1,8 +1,10 @@
 
 import React, { useState } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Eye, Code } from 'lucide-react';
+import { Eye, Code, Globe } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
+import WebsiteView from '@/components/WebsiteView';
 
 interface EditorProps {
   filePath: string | null;
@@ -10,17 +12,31 @@ interface EditorProps {
 }
 
 const Editor: React.FC<EditorProps> = ({ filePath, fileContent }) => {
-  const [view, setView] = useState<'code' | 'preview'>('code');
+  const [view, setView] = useState<'code' | 'preview'>('preview');
+  const [mode, setMode] = useState<'ide' | 'website'>('ide');
 
-  if (!filePath) {
+  if (mode === 'website') {
     return (
-      <div className="flex items-center justify-center h-full bg-vscode-editor text-gray-400">
-        <p>Select a file to view its contents</p>
+      <div className="h-full flex flex-col">
+        <div className="bg-vscode-sidebar border-b border-vscode-border p-2 flex justify-between items-center">
+          <h2 className="text-white font-medium">Avinash Raj Malaka - Portfolio</h2>
+          <ToggleGroup type="single" value={mode} onValueChange={(value) => value && setMode(value as 'ide' | 'website')}>
+            <ToggleGroupItem value="website" className="bg-green-500 hover:bg-green-600 text-white">
+              <Globe size={16} className="mr-2" />
+              Website Mode
+            </ToggleGroupItem>
+            <ToggleGroupItem value="ide" className="text-gray-300">
+              <Code size={16} className="mr-2" />
+              IDE Mode
+            </ToggleGroupItem>
+          </ToggleGroup>
+        </div>
+        <WebsiteView filePath={filePath} fileContent={fileContent} />
       </div>
     );
   }
 
-  const fileName = filePath.split('/').pop() || '';
+  const fileName = filePath ? filePath.split('/').pop() || '' : '';
 
   const renderContent = () => {
     if (view === 'code') {
@@ -72,33 +88,56 @@ const Editor: React.FC<EditorProps> = ({ filePath, fileContent }) => {
 
   return (
     <div className="h-full bg-vscode-editor flex flex-col">
-      <div className="border-b border-vscode-border p-1 flex justify-between">
+      <div className="border-b border-vscode-border p-2 flex justify-between items-center">
         <div className="flex">
-          <div className={cn(
-            "px-3 py-1 text-sm border-b-2 border-transparent",
-            "inline-flex items-center"
-          )}>
-            <span className="truncate max-w-[150px]">{fileName}</span>
-          </div>
+          {filePath ? (
+            <div className={cn(
+              "px-3 py-1 text-sm border-b-2 border-transparent",
+              "inline-flex items-center"
+            )}>
+              <span className="truncate max-w-[150px]">{fileName}</span>
+            </div>
+          ) : (
+            <div className="text-sm text-gray-400">Select a file to view its contents</div>
+          )}
         </div>
-        <div className="flex items-center">
-          <div className="text-xs text-gray-500 mr-2">{getFileType()}</div>
-          <Tabs value={view} onValueChange={(v) => setView(v as 'code' | 'preview')}>
-            <TabsList className="bg-vscode-highlight">
-              <TabsTrigger value="code" className="flex items-center gap-1">
-                <Code size={14} />
-                <span>Code</span>
-              </TabsTrigger>
-              <TabsTrigger value="preview" className="flex items-center gap-1">
-                <Eye size={14} />
-                <span>Preview</span>
-              </TabsTrigger>
-            </TabsList>
-          </Tabs>
+        <div className="flex items-center gap-4">
+          <ToggleGroup type="single" value={mode} onValueChange={(value) => value && setMode(value as 'ide' | 'website')}>
+            <ToggleGroupItem value="ide" className="text-gray-300">
+              <Code size={16} className="mr-2" />
+              IDE Mode
+            </ToggleGroupItem>
+            <ToggleGroupItem value="website" className="bg-green-500 hover:bg-green-600 text-white">
+              <Globe size={16} className="mr-2" />
+              Website Mode
+            </ToggleGroupItem>
+          </ToggleGroup>
+          
+          {filePath && (
+            <>
+              <div className="text-xs text-gray-500 mr-2">{getFileType()}</div>
+              <Tabs value={view} onValueChange={(v) => setView(v as 'code' | 'preview')}>
+                <TabsList className="bg-vscode-highlight">
+                  <TabsTrigger value="code" className="flex items-center gap-1">
+                    <Code size={14} />
+                    <span>Code</span>
+                  </TabsTrigger>
+                  <TabsTrigger value="preview" className="flex items-center gap-1">
+                    <Eye size={14} />
+                    <span>Preview</span>
+                  </TabsTrigger>
+                </TabsList>
+              </Tabs>
+            </>
+          )}
         </div>
       </div>
       <div className="flex-1 overflow-auto">
-        {renderContent()}
+        {filePath ? renderContent() : (
+          <div className="flex items-center justify-center h-full bg-vscode-editor text-gray-400">
+            <p>Select a file to view its contents</p>
+          </div>
+        )}
       </div>
     </div>
   );
