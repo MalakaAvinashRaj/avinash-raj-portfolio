@@ -1,8 +1,9 @@
 
 import React, { useState } from 'react';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Eye, Code } from 'lucide-react';
+import { Eye, Code, Globe } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
+import { Button } from '@/components/ui/button';
 
 interface EditorProps {
   filePath: string | null;
@@ -10,7 +11,8 @@ interface EditorProps {
 }
 
 const Editor: React.FC<EditorProps> = ({ filePath, fileContent }) => {
-  const [view, setView] = useState<'code' | 'preview'>('code');
+  const [view, setView] = useState<'preview' | 'code'>('preview');
+  const [isWebsiteMode, setIsWebsiteMode] = useState(false);
 
   if (!filePath) {
     return (
@@ -21,6 +23,14 @@ const Editor: React.FC<EditorProps> = ({ filePath, fileContent }) => {
   }
 
   const fileName = filePath.split('/').pop() || '';
+
+  const toggleWebsiteMode = () => {
+    setIsWebsiteMode(!isWebsiteMode);
+    // Always set to preview when switching to website mode
+    if (!isWebsiteMode) {
+      setView('preview');
+    }
+  };
 
   const renderContent = () => {
     if (view === 'code') {
@@ -72,7 +82,7 @@ const Editor: React.FC<EditorProps> = ({ filePath, fileContent }) => {
 
   return (
     <div className="h-full bg-vscode-editor flex flex-col">
-      <div className="border-b border-vscode-border p-1 flex justify-between">
+      <div className="border-b border-vscode-border p-2 flex justify-between items-center">
         <div className="flex">
           <div className={cn(
             "px-3 py-1 text-sm border-b-2 border-transparent",
@@ -81,20 +91,33 @@ const Editor: React.FC<EditorProps> = ({ filePath, fileContent }) => {
             <span className="truncate max-w-[150px]">{fileName}</span>
           </div>
         </div>
-        <div className="flex items-center">
-          <div className="text-xs text-gray-500 mr-2">{getFileType()}</div>
-          <Tabs value={view} onValueChange={(v) => setView(v as 'code' | 'preview')}>
-            <TabsList className="bg-vscode-highlight">
-              <TabsTrigger value="code" className="flex items-center gap-1">
-                <Code size={14} />
-                <span>Code</span>
-              </TabsTrigger>
-              <TabsTrigger value="preview" className="flex items-center gap-1">
+        <div className="flex items-center space-x-4">
+          <Button 
+            variant={isWebsiteMode ? "outline" : "default"}
+            onClick={toggleWebsiteMode}
+            className={cn(
+              "flex items-center gap-1", 
+              isWebsiteMode ? "bg-green-500 text-white hover:bg-green-600" : ""
+            )}
+          >
+            <Globe size={16} />
+            {isWebsiteMode ? "Website Mode" : "Code Mode"}
+          </Button>
+          
+          {!isWebsiteMode && (
+            <ToggleGroup type="single" value={view} onValueChange={(value) => value && setView(value as 'code' | 'preview')}>
+              <ToggleGroupItem value="preview" className="flex items-center gap-1">
                 <Eye size={14} />
                 <span>Preview</span>
-              </TabsTrigger>
-            </TabsList>
-          </Tabs>
+              </ToggleGroupItem>
+              <ToggleGroupItem value="code" className="flex items-center gap-1">
+                <Code size={14} />
+                <span>Code</span>
+              </ToggleGroupItem>
+            </ToggleGroup>
+          )}
+          
+          <div className="text-xs text-gray-500">{getFileType()}</div>
         </div>
       </div>
       <div className="flex-1 overflow-auto">
