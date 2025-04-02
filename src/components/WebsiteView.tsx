@@ -106,7 +106,7 @@ const WebsiteView: React.FC<WebsiteViewProps> = ({ filePath, fileContent }) => {
           <p className="text-xl mb-6">Full-Stack Developer & Blockchain Specialist</p>
           <div className="flex justify-center gap-4">
             {contactInfo.map((info, index) => {
-              if (info && info.label === "GitHub" || info?.label === "LinkedIn") {
+              if (info && (info.label === "GitHub" || info.label === "LinkedIn")) {
                 return (
                   <Button 
                     key={index} 
@@ -203,20 +203,20 @@ const WebsiteView: React.FC<WebsiteViewProps> = ({ filePath, fileContent }) => {
                   {contactInfo.map((info, index) => {
                     if (!info) return null;
                     
-                    let value = info.value;
-                    if (info.label === "Email" || info.label === "LinkedIn" || info.label === "GitHub") {
-                      value = (
-                        <a href={info.label === "Email" ? `mailto:${info.value}` : info.value} 
-                           className="text-blue-500 hover:underline"
-                           target="_blank" rel="noopener noreferrer">
-                          {info.value}
-                        </a>
-                      );
-                    }
-                    
                     return (
                       <li key={index} className="flex items-center">
-                        <span className="font-semibold mr-2">{info.label}:</span> {value}
+                        <span className="font-semibold mr-2">{info.label}:</span>
+                        {info.label === "Email" ? (
+                          <a href={`mailto:${info.value}`} className="text-blue-500 hover:underline">
+                            {info.value}
+                          </a>
+                        ) : info.label === "LinkedIn" || info.label === "GitHub" ? (
+                          <a href={info.value} className="text-blue-500 hover:underline" target="_blank" rel="noopener noreferrer">
+                            {info.value}
+                          </a>
+                        ) : (
+                          info.value
+                        )}
                       </li>
                     );
                   })}
