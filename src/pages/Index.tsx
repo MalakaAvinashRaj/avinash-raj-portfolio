@@ -1,8 +1,11 @@
+
 import React, { useState, useEffect } from 'react';
 import FileExplorer from '@/components/FileExplorer';
 import Editor from '@/components/Editor';
 import Terminal from '@/components/Terminal';
 import LoadingScreen from '@/components/LoadingScreen';
+import LayoutSwitcher from '@/components/LayoutSwitcher';
+import { useLayoutMode } from '@/contexts/LayoutModeContext';
 import { fileContents } from '@/data/fileContents';
 import { ChevronLeft, ChevronRight, Minimize, Maximize } from 'lucide-react';
 
@@ -13,6 +16,7 @@ const Index = () => {
   const [sidebarVisible, setSidebarVisible] = useState(true);
   const [terminalMinimized, setTerminalMinimized] = useState(false);
   const [loading, setLoading] = useState(true);
+  const { mode } = useLayoutMode();
 
   useEffect(() => {
     if (selectedFile && fileContents[selectedFile]) {
@@ -166,10 +170,29 @@ const Index = () => {
     return <LoadingScreen onComplete={() => setLoading(false)} />;
   }
 
+  // Render website mode
+  if (mode === 'website') {
+    return (
+      <div className="flex flex-col min-h-screen bg-white text-gray-900">
+        <header className="sticky top-0 z-10 bg-white shadow-sm border-b border-gray-200">
+          <div className="container mx-auto px-4 py-4 flex justify-between items-center">
+            <h1 className="text-xl font-bold">Avinash Raj Malaka</h1>
+            <LayoutSwitcher />
+          </div>
+        </header>
+        <main className="flex-1">
+          <Editor filePath={selectedFile} fileContent={fileContent} />
+        </main>
+      </div>
+    );
+  }
+
+  // Render IDE mode (original UI)
   return (
     <div className="flex flex-col h-screen bg-vscode-bg text-white overflow-hidden">
-      <div className="h-8 bg-vscode-sidebar border-b border-vscode-border flex items-center px-4">
+      <div className="h-8 bg-vscode-sidebar border-b border-vscode-border flex items-center justify-between px-4">
         <div className="text-sm text-gray-400">Avinash Raj Malaka - Developer Portfolio</div>
+        <LayoutSwitcher />
       </div>
       
       <div className="flex flex-1 overflow-hidden relative">

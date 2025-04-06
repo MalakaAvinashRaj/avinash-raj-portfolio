@@ -1,10 +1,10 @@
 
 import React, { useState } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Eye, Code, Globe } from 'lucide-react';
+import { Eye, Code } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
 import WebsiteView from '@/components/WebsiteView';
+import { useLayoutMode } from '@/contexts/LayoutModeContext';
 
 interface EditorProps {
   filePath: string | null;
@@ -13,27 +13,10 @@ interface EditorProps {
 
 const Editor: React.FC<EditorProps> = ({ filePath, fileContent }) => {
   const [view, setView] = useState<'code' | 'preview'>('preview');
-  const [mode, setMode] = useState<'ide' | 'website'>('ide');
+  const { mode } = useLayoutMode();
 
   if (mode === 'website') {
-    return (
-      <div className="h-full flex flex-col">
-        <div className="bg-vscode-sidebar border-b border-vscode-border p-2 flex justify-between items-center">
-          <h2 className="text-white font-medium">Avinash Raj Malaka - Portfolio</h2>
-          <ToggleGroup type="single" value={mode} onValueChange={(value) => value && setMode(value as 'ide' | 'website')}>
-            <ToggleGroupItem value="website" className="bg-green-500 hover:bg-green-600 text-white">
-              <Globe size={16} className="mr-2" />
-              Website Mode
-            </ToggleGroupItem>
-            <ToggleGroupItem value="ide" className="text-gray-300">
-              <Code size={16} className="mr-2" />
-              IDE Mode
-            </ToggleGroupItem>
-          </ToggleGroup>
-        </div>
-        <WebsiteView filePath={filePath} fileContent={fileContent} />
-      </div>
-    );
+    return <WebsiteView filePath={filePath} fileContent={fileContent} />;
   }
 
   const fileName = filePath ? filePath.split('/').pop() || '' : '';
@@ -102,17 +85,6 @@ const Editor: React.FC<EditorProps> = ({ filePath, fileContent }) => {
           )}
         </div>
         <div className="flex items-center gap-4">
-          <ToggleGroup type="single" value={mode} onValueChange={(value) => value && setMode(value as 'ide' | 'website')}>
-            <ToggleGroupItem value="ide" className="text-gray-300">
-              <Code size={16} className="mr-2" />
-              IDE Mode
-            </ToggleGroupItem>
-            <ToggleGroupItem value="website" className="bg-green-500 hover:bg-green-600 text-white">
-              <Globe size={16} className="mr-2" />
-              Website Mode
-            </ToggleGroupItem>
-          </ToggleGroup>
-          
           {filePath && (
             <>
               <div className="text-xs text-gray-500 mr-2">{getFileType()}</div>
