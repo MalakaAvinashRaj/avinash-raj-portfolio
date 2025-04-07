@@ -3,8 +3,6 @@ import React, { useState } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Eye, Code } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import WebsiteView from '@/components/WebsiteView';
-import { useLayoutMode } from '@/contexts/LayoutModeContext';
 
 interface EditorProps {
   filePath: string | null;
@@ -12,14 +10,17 @@ interface EditorProps {
 }
 
 const Editor: React.FC<EditorProps> = ({ filePath, fileContent }) => {
-  const [view, setView] = useState<'code' | 'preview'>('preview');
-  const { mode } = useLayoutMode();
+  const [view, setView] = useState<'code' | 'preview'>('code');
 
-  if (mode === 'website') {
-    return <WebsiteView filePath={filePath} fileContent={fileContent} />;
+  if (!filePath) {
+    return (
+      <div className="flex items-center justify-center h-full bg-vscode-editor text-gray-400">
+        <p>Select a file to view its contents</p>
+      </div>
+    );
   }
 
-  const fileName = filePath ? filePath.split('/').pop() || '' : '';
+  const fileName = filePath.split('/').pop() || '';
 
   const renderContent = () => {
     if (view === 'code') {
@@ -71,45 +72,33 @@ const Editor: React.FC<EditorProps> = ({ filePath, fileContent }) => {
 
   return (
     <div className="h-full bg-vscode-editor flex flex-col">
-      <div className="border-b border-vscode-border p-2 flex justify-between items-center">
+      <div className="border-b border-vscode-border p-1 flex justify-between">
         <div className="flex">
-          {filePath ? (
-            <div className={cn(
-              "px-3 py-1 text-sm border-b-2 border-transparent",
-              "inline-flex items-center"
-            )}>
-              <span className="truncate max-w-[150px]">{fileName}</span>
-            </div>
-          ) : (
-            <div className="text-sm text-gray-400">Select a file to view its contents</div>
-          )}
+          <div className={cn(
+            "px-3 py-1 text-sm border-b-2 border-transparent",
+            "inline-flex items-center"
+          )}>
+            <span className="truncate max-w-[150px]">{fileName}</span>
+          </div>
         </div>
-        <div className="flex items-center gap-4">
-          {filePath && (
-            <>
-              <div className="text-xs text-gray-500 mr-2">{getFileType()}</div>
-              <Tabs value={view} onValueChange={(v) => setView(v as 'code' | 'preview')}>
-                <TabsList className="bg-vscode-highlight">
-                  <TabsTrigger value="code" className="flex items-center gap-1">
-                    <Code size={14} />
-                    <span>Code</span>
-                  </TabsTrigger>
-                  <TabsTrigger value="preview" className="flex items-center gap-1">
-                    <Eye size={14} />
-                    <span>Preview</span>
-                  </TabsTrigger>
-                </TabsList>
-              </Tabs>
-            </>
-          )}
+        <div className="flex items-center">
+          <div className="text-xs text-gray-500 mr-2">{getFileType()}</div>
+          <Tabs value={view} onValueChange={(v) => setView(v as 'code' | 'preview')}>
+            <TabsList className="bg-vscode-highlight">
+              <TabsTrigger value="code" className="flex items-center gap-1">
+                <Code size={14} />
+                <span>Code</span>
+              </TabsTrigger>
+              <TabsTrigger value="preview" className="flex items-center gap-1">
+                <Eye size={14} />
+                <span>Preview</span>
+              </TabsTrigger>
+            </TabsList>
+          </Tabs>
         </div>
       </div>
       <div className="flex-1 overflow-auto">
-        {filePath ? renderContent() : (
-          <div className="flex items-center justify-center h-full bg-vscode-editor text-gray-400">
-            <p>Select a file to view its contents</p>
-          </div>
-        )}
+        {renderContent()}
       </div>
     </div>
   );
