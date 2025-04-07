@@ -5,8 +5,13 @@ import Terminal from '@/components/Terminal';
 import LoadingScreen from '@/components/LoadingScreen';
 import { fileContents } from '@/data/fileContents';
 import { ChevronLeft, ChevronRight, Minimize, Maximize } from 'lucide-react';
+import ViewToggle from '@/components/ViewToggle';
 
-const Index = () => {
+interface IndexProps {
+  loadingOnly?: boolean;
+}
+
+const Index: React.FC<IndexProps> = ({ loadingOnly = false }) => {
   const [selectedFile, setSelectedFile] = useState<string | null>(null);
   const [fileContent, setFileContent] = useState<string>('');
   const [currentDir, setCurrentDir] = useState<string>('home');
@@ -19,6 +24,16 @@ const Index = () => {
       setFileContent(fileContents[selectedFile]);
     }
   }, [selectedFile]);
+
+  useEffect(() => {
+    if (loadingOnly) {
+      return;
+    }
+    
+    if (!selectedFile && Object.keys(fileContents).length > 0) {
+      setSelectedFile('home/about.txt');
+    }
+  }, [loadingOnly, selectedFile]);
 
   const handleFileSelect = (filePath: string) => {
     setSelectedFile(filePath);
@@ -162,7 +177,7 @@ const Index = () => {
     return `Opening ${filePath}...`;
   };
 
-  if (loading) {
+  if (loadingOnly || loading) {
     return <LoadingScreen onComplete={() => setLoading(false)} />;
   }
 
@@ -173,6 +188,8 @@ const Index = () => {
       </div>
       
       <div className="flex flex-1 overflow-hidden relative">
+        <ViewToggle />
+        
         {!sidebarVisible && (
           <button 
             onClick={toggleSidebar}

@@ -1,15 +1,12 @@
 
-import type { Config } from "tailwindcss";
+import { type Config } from "tailwindcss";
 
 export default {
   darkMode: ["class"],
   content: [
-    "./pages/**/*.{ts,tsx}",
-    "./components/**/*.{ts,tsx}",
-    "./app/**/*.{ts,tsx}",
-    "./src/**/*.{ts,tsx}",
+    "./index.html",
+    "./src/**/*.{js,ts,jsx,tsx}",
   ],
-  prefix: "",
   theme: {
     container: {
       center: true,
@@ -20,15 +17,6 @@ export default {
     },
     extend: {
       colors: {
-        vscode: {
-          'bg': '#1e1e1e',
-          'sidebar': '#252526',
-          'editor': '#1e1e1e',
-          'terminal': '#1e1e1e',
-          'active': '#007acc',
-          'highlight': '#2d2d2d',
-          'border': '#474747',
-        },
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
@@ -62,9 +50,15 @@ export default {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
-      },
-      fontFamily: {
-        'mono': ['JetBrains Mono', 'Menlo', 'Monaco', 'Courier New', 'monospace'],
+        vscode: {
+          bg: "#1e1e1e",
+          highlight: "#2a2d2e",
+          active: "#0e639c",
+          border: "#454545",
+          sidebar: "#252526",
+          editor: "#1e1e1e",
+          terminal: "#1e1e1e",
+        }
       },
       borderRadius: {
         lg: "var(--radius)",
@@ -80,20 +74,31 @@ export default {
           from: { height: "var(--radix-accordion-content-height)" },
           to: { height: "0" },
         },
-        "blink": {
-          "0%, 100%": { opacity: "1" },
-          "50%": { opacity: "0" },
+        blink: {
+          '0%, 100%': { opacity: '1' },
+          '50%': { opacity: '0' },
         },
-        "typing": {
-          "from": { width: "0" },
-          "to": { width: "100%" },
+        "float": {
+          "0%, 100%": { transform: "translateY(0)" },
+          "50%": { transform: "translateY(-10px)" },
         },
+        "pulse-glow": {
+          "0%, 100%": { 
+            boxShadow: "0 0 10px 2px rgba(59, 130, 246, 0.6)",
+            transform: "scale(1)"
+          },
+          "50%": { 
+            boxShadow: "0 0 20px 5px rgba(59, 130, 246, 0.8)",
+            transform: "scale(1.03)"
+          },
+        }
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
-        "blink": "blink 1s step-end infinite",
-        "typing": "typing 3.5s steps(40, end)",
+        blink: 'blink 1s step-end infinite',
+        "float": "float 5s ease-in-out infinite",
+        "pulse-glow": "pulse-glow 3s ease-in-out infinite",
       },
     },
   },

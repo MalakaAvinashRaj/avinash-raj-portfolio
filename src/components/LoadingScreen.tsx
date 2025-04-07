@@ -22,7 +22,7 @@ const LoadingScreen = ({ onComplete }: { onComplete: () => void }) => {
     ];
 
     let currentTaskIndex = 0;
-    const totalDuration = 10000; // 10 seconds
+    const totalDuration = 4000; // Exactly 4 seconds
     const taskDuration = totalDuration / tasks.length;
     const incrementInterval = 20; // Update progress every 20ms
     const incrementStep = (100 / totalDuration) * incrementInterval;
