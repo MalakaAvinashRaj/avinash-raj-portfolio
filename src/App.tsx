@@ -18,7 +18,7 @@ const queryClient = new QueryClient();
 const AppContent = () => {
   const { viewMode, hasSelectedView } = useViewMode();
 
-  // If user hasn't selected a view yet, just show the welcome modal
+  // If user hasn't selected a view yet, show the welcome modal
   if (!hasSelectedView) {
     return <WelcomeModal />;
   }

@@ -13,8 +13,8 @@ const ViewToggle: React.FC = () => {
   const toggleView = () => {
     const newMode = viewMode === 'professional' ? 'simple' : 'professional';
     setViewMode(newMode);
-    // Force a reload to switch the entire view
-    window.location.reload();
+    // Use window.location.href instead of reload to avoid triggering the welcome modal
+    window.location.href = '/';
   };
 
   return (

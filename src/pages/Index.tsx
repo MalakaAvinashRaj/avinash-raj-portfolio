@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import FileExplorer from '@/components/FileExplorer';
 import Editor from '@/components/Editor';
@@ -185,6 +186,7 @@ const Index: React.FC<IndexProps> = ({ loadingOnly = false }) => {
     <div className="flex flex-col h-screen bg-vscode-bg text-white overflow-hidden">
       <div className="h-8 bg-vscode-sidebar border-b border-vscode-border flex items-center px-4 justify-between">
         <div className="text-sm text-gray-400">Avinash Raj Malaka - Developer Portfolio</div>
+        <Navbar />
       </div>
       
       <div className="flex flex-1 overflow-hidden relative">
