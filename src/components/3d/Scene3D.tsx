@@ -40,14 +40,29 @@ const Fox = ({ position = [0, -1, 0], scale = 0.02 }) => {
   });
   
   return (
-    <group ref={group} position={position} scale={scale}>
+    <group 
+      ref={group} 
+      position={new THREE.Vector3(...position)} 
+      scale={scale}
+    >
       <FoxModel />
     </group>
   );
 };
 
+// Interface for CubeModel props
+interface CubeModelProps {
+  position?: [number, number, number];
+  color?: string;
+  size?: number;
+}
+
 // Fallback cube model
-const CubeModel = ({ color = "#9b87f5", size = 2 }) => {
+const CubeModel: React.FC<CubeModelProps> = ({ 
+  color = "#9b87f5", 
+  size = 2,
+  position = [0, 0, 0] 
+}) => {
   const mesh = useRef<THREE.Mesh>(null!);
   
   useFrame((state) => {
@@ -57,7 +72,7 @@ const CubeModel = ({ color = "#9b87f5", size = 2 }) => {
   });
 
   return (
-    <mesh ref={mesh}>
+    <mesh ref={mesh} position={new THREE.Vector3(...position)}>
       <boxGeometry args={[size, size, size]} />
       <meshStandardMaterial color={color} />
     </mesh>
@@ -66,10 +81,9 @@ const CubeModel = ({ color = "#9b87f5", size = 2 }) => {
 
 // Try to use the fox model, fallback to cube
 const FoxModel = () => {
-  let fox;
   try {
-    fox = useGLTF('/fox.glb');
-    return <primitive object={fox.scene} />;
+    const { scene } = useGLTF('/fox.glb');
+    return <primitive object={scene} />;
   } catch (error) {
     console.error("Failed to load fox model, using cube grid instead");
     return <CubeGrid />;
