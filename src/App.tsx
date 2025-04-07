@@ -11,6 +11,7 @@ import SimpleView from "./components/SimpleView";
 import WelcomeModal from "./components/WelcomeModal";
 import { ViewModeProvider, useViewMode } from "./contexts/ViewModeContext";
 import SimpleLoadingScreen from "./components/SimpleLoadingScreen";
+import LoadingScreen from "./components/LoadingScreen";
 
 const queryClient = new QueryClient();
 
@@ -29,7 +30,7 @@ const AppContent = () => {
 
   if (loading) {
     return viewMode === 'professional' ? (
-      <Index loadingOnly={true} />
+      <LoadingScreen onComplete={() => setLoading(false)} />
     ) : (
       <SimpleLoadingScreen onComplete={() => setLoading(false)} />
     );
@@ -38,7 +39,6 @@ const AppContent = () => {
   return (
     <>
       <WelcomeModal />
-      
       {viewMode === 'professional' ? <Index /> : <SimpleView />}
     </>
   );

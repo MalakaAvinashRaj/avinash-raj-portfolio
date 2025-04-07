@@ -32,7 +32,7 @@ const SimpleLoadingScreen = ({ onComplete }: { onComplete: () => void }) => {
 
   return (
     <div className="fixed inset-0 bg-gray-900 flex flex-col items-center justify-center z-50">
-      <div className="h-64 w-64 mb-8">
+      <div className="h-48 w-48 md:h-64 md:w-64 mb-8">
         <Canvas camera={{ position: [0, 0, 5] }}>
           <ambientLight intensity={0.5} />
           <spotLight position={[10, 10, 10]} angle={0.15} penumbra={1} />
@@ -52,7 +52,7 @@ const SimpleLoadingScreen = ({ onComplete }: { onComplete: () => void }) => {
       </div>
       
       <motion.h1 
-        className="text-3xl font-bold text-white mb-6"
+        className="text-xl sm:text-2xl md:text-3xl font-bold text-white mb-6"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 1 }}
@@ -60,7 +60,7 @@ const SimpleLoadingScreen = ({ onComplete }: { onComplete: () => void }) => {
         Avinash Raj Malaka
       </motion.h1>
       
-      <div className="w-64 h-1 bg-gray-800 rounded-full overflow-hidden">
+      <div className="w-64 sm:w-80 h-1 bg-gray-800 rounded-full overflow-hidden">
         <motion.div 
           className="h-full bg-gradient-to-r from-blue-600 to-purple-600"
           initial={{ width: 0 }}
