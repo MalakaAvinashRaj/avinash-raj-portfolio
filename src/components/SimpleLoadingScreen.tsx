@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Canvas } from '@react-three/fiber';
-import { Box, OrbitControls, Text3D, Center } from '@react-three/drei';
+import { OrbitControls } from '@react-three/drei';
 
 const SimpleLoadingScreen = ({ onComplete }: { onComplete: () => void }) => {
   const [progress, setProgress] = useState(0);
@@ -36,12 +36,12 @@ const SimpleLoadingScreen = ({ onComplete }: { onComplete: () => void }) => {
         <Canvas camera={{ position: [0, 0, 5] }}>
           <ambientLight intensity={0.5} />
           <spotLight position={[10, 10, 10]} angle={0.15} penumbra={1} />
-          <Box
-            args={[2, 2, 2]}
+          <mesh
             rotation={[Math.PI / 4 * progress / 25, Math.PI / 4 * progress / 25, 0]}
           >
-            <meshStandardMaterial color="#9b87f5" wireframe />
-          </Box>
+            <boxGeometry args={[2, 2, 2]} />
+            <meshStandardMaterial wireframe color="#9b87f5" />
+          </mesh>
           <OrbitControls 
             enableZoom={false} 
             enablePan={false}

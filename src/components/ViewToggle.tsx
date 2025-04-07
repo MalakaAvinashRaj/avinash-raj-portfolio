@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Button } from '@/components/ui/button';
-import { Monitor, Cube } from 'lucide-react';
+import { Monitor, Box } from 'lucide-react';
 import { useViewMode } from '@/contexts/ViewModeContext';
 import { motion } from 'framer-motion';
 
@@ -29,7 +29,7 @@ const ViewToggle: React.FC = () => {
       >
         {viewMode === 'professional' ? (
           <>
-            <Cube size={16} className="mr-2" />
+            <Box size={16} className="mr-2" />
             <span>Switch to Simple View</span>
           </>
         ) : (

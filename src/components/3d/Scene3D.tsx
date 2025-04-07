@@ -1,9 +1,8 @@
 
 import React, { useRef } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
-import { OrbitControls, Text, useHelper } from '@react-three/drei';
+import { OrbitControls } from '@react-three/drei';
 import * as THREE from 'three';
-import { Vector3 } from 'three';
 
 interface CubeProps {
   position: [number, number, number];
@@ -31,7 +30,10 @@ const Cube: React.FC<CubeProps> = ({
   return (
     <mesh position={position} ref={mesh}>
       <boxGeometry args={[size, size, size]} />
-      <meshStandardMaterial color={color} wireframe={wireframe} />
+      <meshStandardMaterial 
+        color={color} 
+        wireframe={wireframe} 
+      />
     </mesh>
   );
 };
