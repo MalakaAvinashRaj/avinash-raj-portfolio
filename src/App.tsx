@@ -4,7 +4,7 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import SimpleView from "./components/SimpleView";
@@ -17,31 +17,14 @@ const queryClient = new QueryClient();
 
 const AppContent = () => {
   const { viewMode, hasSelectedView } = useViewMode();
-  const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    // Always show loading screen for 4 seconds
-    const timer = setTimeout(() => {
-      setLoading(false);
-    }, 4000);
-    
-    return () => clearTimeout(timer);
-  }, [viewMode]);
-
-  if (loading) {
-    return viewMode === 'professional' ? (
-      <LoadingScreen onComplete={() => setLoading(false)} />
-    ) : (
-      <SimpleLoadingScreen onComplete={() => setLoading(false)} />
-    );
+  // If user hasn't selected a view yet, just show the welcome modal
+  if (!hasSelectedView) {
+    return <WelcomeModal />;
   }
 
-  return (
-    <>
-      <WelcomeModal />
-      {viewMode === 'professional' ? <Index /> : <SimpleView />}
-    </>
-  );
+  // Skip loading screens, go directly to the appropriate view
+  return viewMode === 'professional' ? <Index /> : <SimpleView />;
 };
 
 const App = () => (

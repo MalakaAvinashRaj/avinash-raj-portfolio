@@ -5,7 +5,7 @@ import Terminal from '@/components/Terminal';
 import LoadingScreen from '@/components/LoadingScreen';
 import { fileContents } from '@/data/fileContents';
 import { ChevronLeft, ChevronRight, Minimize, Maximize } from 'lucide-react';
-import ViewToggle from '@/components/ViewToggle';
+import Navbar from '@/components/Navbar';
 
 interface IndexProps {
   loadingOnly?: boolean;
@@ -177,19 +177,17 @@ const Index: React.FC<IndexProps> = ({ loadingOnly = false }) => {
     return `Opening ${filePath}...`;
   };
 
-  if (loadingOnly || loading) {
+  if (loadingOnly) {
     return <LoadingScreen onComplete={() => setLoading(false)} />;
   }
 
   return (
     <div className="flex flex-col h-screen bg-vscode-bg text-white overflow-hidden">
-      <div className="h-8 bg-vscode-sidebar border-b border-vscode-border flex items-center px-4">
+      <div className="h-8 bg-vscode-sidebar border-b border-vscode-border flex items-center px-4 justify-between">
         <div className="text-sm text-gray-400">Avinash Raj Malaka - Developer Portfolio</div>
       </div>
       
       <div className="flex flex-1 overflow-hidden relative">
-        <ViewToggle />
-        
         {!sidebarVisible && (
           <button 
             onClick={toggleSidebar}
