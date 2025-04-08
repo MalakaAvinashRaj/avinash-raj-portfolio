@@ -14,10 +14,8 @@ const ViewToggle: React.FC = () => {
     const newMode = viewMode === 'professional' ? 'simple' : 'professional';
     setViewMode(newMode);
     
-    // Just update the view mode without page reload to prevent welcome modal
-    setTimeout(() => {
-      window.location.href = '/';
-    }, 100);
+    // Force a hard navigation without reload to prevent the welcome modal
+    window.location.replace('/');
   };
 
   return (

@@ -183,10 +183,11 @@ const Index: React.FC<IndexProps> = ({ loadingOnly = false }) => {
 
   return (
     <div className="flex flex-col h-screen bg-vscode-bg text-white overflow-hidden">
-      {/* Add a spacer div for the fixed navbar */}
-      <div className="h-8"></div>
+      <Navbar />
+      
+      <div className="h-12"></div>
 
-      <div className="h-8 bg-vscode-sidebar border-b border-vscode-border flex items-center px-4 justify-between">
+      <div className="h-8 bg-vscode-sidebar border-b border-vscode-border flex items-center px-4">
         <div className="text-sm text-gray-400">Avinash Raj Malaka - Developer Portfolio</div>
       </div>
       

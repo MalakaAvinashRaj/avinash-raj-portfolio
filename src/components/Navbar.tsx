@@ -13,7 +13,7 @@ const Navbar: React.FC = () => {
   
   return (
     <motion.nav
-      className={`fixed top-0 left-0 right-0 z-50 ${
+      className={`fixed top-0 left-0 right-0 z-50 h-12 ${
         isProfessional 
           ? 'bg-vscode-bg border-b border-vscode-border' 
           : 'bg-gray-900/80 backdrop-blur-sm'
@@ -22,7 +22,7 @@ const Navbar: React.FC = () => {
       animate={{ y: 0 }}
       transition={{ duration: 0.3 }}
     >
-      <div className="container mx-auto px-4 py-2 flex justify-between items-center">
+      <div className="container mx-auto px-4 h-full flex justify-between items-center">
         <motion.div
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
