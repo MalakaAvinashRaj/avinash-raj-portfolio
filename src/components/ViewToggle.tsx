@@ -13,8 +13,11 @@ const ViewToggle: React.FC = () => {
   const toggleView = () => {
     const newMode = viewMode === 'professional' ? 'simple' : 'professional';
     setViewMode(newMode);
-    // Use window.location.href instead of reload to avoid triggering the welcome modal
-    window.location.href = '/';
+    
+    // Just update the view mode without page reload to prevent welcome modal
+    setTimeout(() => {
+      window.location.href = '/';
+    }, 100);
   };
 
   return (

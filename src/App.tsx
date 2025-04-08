@@ -4,14 +4,11 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { useState } from "react";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import SimpleView from "./components/SimpleView";
 import WelcomeModal from "./components/WelcomeModal";
 import { ViewModeProvider, useViewMode } from "./contexts/ViewModeContext";
-import SimpleLoadingScreen from "./components/SimpleLoadingScreen";
-import LoadingScreen from "./components/LoadingScreen";
 
 const queryClient = new QueryClient();
 
@@ -23,7 +20,7 @@ const AppContent = () => {
     return <WelcomeModal />;
   }
 
-  // Skip loading screens, go directly to the appropriate view
+  // Go directly to the appropriate view based on user preference
   return viewMode === 'professional' ? <Index /> : <SimpleView />;
 };
 
