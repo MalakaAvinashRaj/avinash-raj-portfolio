@@ -14,8 +14,9 @@ const ViewToggle: React.FC = () => {
     const newMode = viewMode === 'professional' ? 'simple' : 'professional';
     setViewMode(newMode);
     
-    // Force a hard navigation without reload to prevent the welcome modal
-    window.location.replace('/');
+    // Use location.href for a smoother transition
+    // The cookies are already set by setViewMode, so the modal won't show
+    window.location.href = '/';
   };
 
   return (

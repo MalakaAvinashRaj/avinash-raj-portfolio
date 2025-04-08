@@ -18,6 +18,7 @@ export const ViewModeProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   const [hasSelectedView, setHasSelectedView] = useState<boolean>(false);
 
   useEffect(() => {
+    // Check if viewMode cookie exists
     const savedMode = Cookies.get('viewMode') as ViewMode | undefined;
     const viewSelected = Cookies.get('viewSelected');
     
@@ -25,6 +26,7 @@ export const ViewModeProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       setViewModeState(savedMode);
     }
     
+    // If viewSelected cookie exists, user has chosen a view before
     if (viewSelected === 'true') {
       setHasSelectedView(true);
     }
