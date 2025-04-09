@@ -10,7 +10,7 @@ interface EditorProps {
 }
 
 const Editor: React.FC<EditorProps> = ({ filePath, fileContent }) => {
-  const [view, setView] = useState<'code' | 'preview'>('code');
+  const [view, setView] = useState<'code' | 'preview'>('preview');
 
   if (!filePath) {
     return (
