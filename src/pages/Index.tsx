@@ -1,23 +1,18 @@
+
 import React, { useState, useEffect } from 'react';
 import FileExplorer from '@/components/FileExplorer';
 import Editor from '@/components/Editor';
 import Terminal from '@/components/Terminal';
-import LoadingScreen from '@/components/LoadingScreen';
 import { fileContents } from '@/data/fileContents';
 import { ChevronLeft, ChevronRight, Minimize, Maximize } from 'lucide-react';
 import Navbar from '@/components/Navbar';
 
-interface IndexProps {
-  loadingOnly?: boolean;
-}
-
-const Index: React.FC<IndexProps> = ({ loadingOnly = false }) => {
+const Index: React.FC = () => {
   const [selectedFile, setSelectedFile] = useState<string | null>(null);
   const [fileContent, setFileContent] = useState<string>('');
   const [currentDir, setCurrentDir] = useState<string>('home');
   const [sidebarVisible, setSidebarVisible] = useState(true);
   const [terminalMinimized, setTerminalMinimized] = useState(false);
-  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (selectedFile && fileContents[selectedFile]) {
@@ -26,14 +21,10 @@ const Index: React.FC<IndexProps> = ({ loadingOnly = false }) => {
   }, [selectedFile]);
 
   useEffect(() => {
-    if (loadingOnly) {
-      return;
-    }
-    
     if (!selectedFile && Object.keys(fileContents).length > 0) {
       setSelectedFile('home/about.txt');
     }
-  }, [loadingOnly, selectedFile]);
+  }, [selectedFile]);
 
   const handleFileSelect = (filePath: string) => {
     setSelectedFile(filePath);
@@ -176,10 +167,6 @@ const Index: React.FC<IndexProps> = ({ loadingOnly = false }) => {
     setSelectedFile(fullPath);
     return `Opening ${filePath}...`;
   };
-
-  if (loadingOnly) {
-    return <LoadingScreen onComplete={() => setLoading(false)} />;
-  }
 
   return (
     <div className="flex flex-col h-screen bg-vscode-bg text-white overflow-hidden">

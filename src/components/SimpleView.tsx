@@ -1,6 +1,5 @@
 
 import React, { useRef } from 'react';
-import Scene3D from './3d/Scene3D';
 import { motion } from 'framer-motion';
 import { fileContents } from '@/data/fileContents';
 import { Github, Mail, Linkedin, ExternalLink } from 'lucide-react';
@@ -84,10 +83,6 @@ const SimpleView: React.FC = () => {
       {/* Hero Section */}
       <header className="min-h-screen pt-28 flex flex-col items-center justify-center relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-b from-purple-900/20 to-gray-900/90 z-10"></div>
-        
-        <div className="absolute inset-0">
-          <Scene3D />
-        </div>
         
         <div className="container mx-auto z-20 text-center px-4">
           <motion.div
