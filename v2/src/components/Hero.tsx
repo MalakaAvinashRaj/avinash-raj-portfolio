@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 
 const Hero = () => {
     return (
-        <section className="min-h-screen flex flex-col justify-center items-center text-center px-4 relative">
+        <section className="min-h-screen flex flex-col justify-center items-center text-center px-4 relative pt-24 md:pt-0">
             <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
