@@ -11,7 +11,7 @@ const Contact = () => {
                 viewport={{ once: true }}
                 className="max-w-2xl mx-auto"
             >
-                <h2 className="text-3xl font-bold mb-8">Get in Touch</h2>
+                <h2 className="text-2xl md:text-3xl font-bold mb-8">Get in Touch</h2>
                 <p className="text-muted-foreground mb-12 text-lg">
                     I'm always open to new opportunities and interesting projects.
                 </p>

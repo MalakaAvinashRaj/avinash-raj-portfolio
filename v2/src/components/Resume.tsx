@@ -10,7 +10,7 @@ const Resume = () => {
         <div className="min-h-screen bg-white text-black p-8 md:p-16 print:p-0">
             <div className="max-w-4xl mx-auto bg-white print:max-w-full">
                 {/* Header */}
-                <header className="border-b-2 border-gray-800 pb-6 mb-8 flex justify-between items-start">
+                <header className="border-b-2 border-gray-800 pb-6 mb-8 flex flex-col md:flex-row justify-between items-start gap-4">
                     <div>
                         <h1 className="text-4xl font-bold uppercase tracking-wide mb-2">{portfolioData.personal.name}</h1>
                         <p className="text-lg text-gray-600">{portfolioData.personal.location}</p>
