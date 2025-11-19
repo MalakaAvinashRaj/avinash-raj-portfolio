@@ -31,7 +31,7 @@ const Navbar: React.FC = () => {
           <h1 className={`font-bold ${isMobile ? 'text-sm' : 'text-xl'}`}>
             {isProfessional ? (
               <span className="text-white">
-                <span className="text-vscode-active">Dev</span>Portfolio<span className="text-vscode-active">IDE</span>
+                <span className="text-vscode-active">Dev </span>Portfolio<span className="text-vscode-active"> IDE</span>
               </span>
             ) : (
               <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-500">
