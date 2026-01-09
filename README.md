@@ -1,1 +1,1 @@
-link - avinashrajmalaka.in
+link - (avinashrajmalaka.in)[avinashrajmalaka.in]
