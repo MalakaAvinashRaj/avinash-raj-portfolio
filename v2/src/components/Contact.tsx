@@ -1,8 +1,11 @@
 import { motion } from 'framer-motion';
-import { portfolioData } from '../data/portfolio';
+import { usePortfolio } from '../context/PortfolioContext';
 import { Github, Linkedin, Mail, Code2 } from 'lucide-react';
+import Editable from './Editable';
 
 const Contact = () => {
+    const { data } = usePortfolio();
+
     return (
         <section id="contact" className="py-20 px-4 text-center">
             <motion.div
@@ -18,7 +21,7 @@ const Contact = () => {
 
                 <div className="flex flex-wrap justify-center gap-6 mb-12">
                     <a
-                        href={portfolioData.personal.social.github}
+                        href={data.personal.social.github}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="p-4 bg-secondary rounded-full hover:bg-primary hover:text-primary-foreground transition-all duration-300 group"
@@ -27,7 +30,7 @@ const Contact = () => {
                         <Github className="w-6 h-6" />
                     </a>
                     <a
-                        href={portfolioData.personal.social.linkedin}
+                        href={data.personal.social.linkedin}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="p-4 bg-secondary rounded-full hover:bg-primary hover:text-primary-foreground transition-all duration-300 group"
@@ -36,7 +39,7 @@ const Contact = () => {
                         <Linkedin className="w-6 h-6" />
                     </a>
                     <a
-                        href={portfolioData.personal.social.leetcode}
+                        href={data.personal.social.leetcode}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="p-4 bg-secondary rounded-full hover:bg-primary hover:text-primary-foreground transition-all duration-300 group"
@@ -45,7 +48,7 @@ const Contact = () => {
                         <Code2 className="w-6 h-6" />
                     </a>
                     <a
-                        href={`mailto:${portfolioData.personal.social.email}`}
+                        href={`mailto:${data.personal.social.email}`}
                         className="p-4 bg-secondary rounded-full hover:bg-primary hover:text-primary-foreground transition-all duration-300 group"
                         title="Email"
                     >
@@ -54,8 +57,20 @@ const Contact = () => {
                 </div>
 
                 <div className="text-sm text-muted-foreground">
-                    <p>{portfolioData.personal.social.email}</p>
-                    <p>{portfolioData.personal.social.phone}</p>
+                    <p>
+                        <Editable
+                            path="personal.social.email"
+                            value={data.personal.social.email}
+                            className="text-sm"
+                        />
+                    </p>
+                    <p>
+                        <Editable
+                            path="personal.social.phone"
+                            value={data.personal.social.phone}
+                            className="text-sm"
+                        />
+                    </p>
                 </div>
             </motion.div>
         </section>

@@ -3,13 +3,17 @@ import Projects from './components/Projects';
 import Experience from './components/Experience';
 import Contact from './components/Contact';
 import Resume from './components/Resume';
+import Edit from './pages/Edit';
 import { useState, useEffect } from 'react';
 import { cn } from './lib/utils';
 import { Routes, Route, useNavigate } from 'react-router-dom';
+import { AuthProvider, useAuth } from './context/AuthContext';
+import { PortfolioProvider } from './context/PortfolioContext';
 
-import { Menu, X } from 'lucide-react';
+import { Menu, X, LogOut } from 'lucide-react';
 
 const MainContent = () => {
+  const { isLoggedIn, logout } = useAuth();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const navigate = useNavigate();
@@ -44,15 +48,28 @@ const MainContent = () => {
         <span className="font-bold text-xl tracking-tighter cursor-pointer" onClick={() => navigate('/')}>AM.</span>
 
         {/* Desktop Nav */}
-        <div className="hidden md:flex gap-6 text-sm font-medium">
+        <div className="hidden md:flex gap-6 text-sm font-medium items-center">
           <button onClick={() => { navigate('/'); window.scrollTo({ top: 0, behavior: 'smooth' }); }} className="hover:text-primary transition-colors">Home</button>
           <button onClick={() => scrollToSection('projects')} className="hover:text-primary transition-colors">Projects</button>
           <button onClick={() => scrollToSection('experience')} className="hover:text-primary transition-colors">Experience</button>
           <button onClick={() => scrollToSection('contact')} className="hover:text-primary transition-colors">Contact</button>
+          {isLoggedIn && (
+            <button
+              onClick={logout}
+              className="px-3 py-1 bg-destructive/10 text-destructive rounded-full hover:bg-destructive hover:text-destructive-foreground transition-all flex items-center gap-1 ml-2"
+            >
+              <LogOut size={14} /> Exit Edit Mode
+            </button>
+          )}
         </div>
 
         {/* Mobile Nav */}
-        <div className="md:hidden">
+        <div className="md:hidden flex items-center gap-2">
+          {isLoggedIn && (
+            <button onClick={logout} className="p-2 text-destructive" title="Logout">
+              <LogOut size={20} />
+            </button>
+          )}
           <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} className="p-2">
             {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
           </button>
@@ -85,10 +102,15 @@ const MainContent = () => {
 
 function App() {
   return (
-    <Routes>
-      <Route path="/" element={<MainContent />} />
-      <Route path="/resume" element={<Resume />} />
-    </Routes>
+    <AuthProvider>
+      <PortfolioProvider>
+        <Routes>
+          <Route path="/" element={<MainContent />} />
+          <Route path="/resume" element={<Resume />} />
+          <Route path="/edit" element={<Edit />} />
+        </Routes>
+      </PortfolioProvider>
+    </AuthProvider>
   );
 }
 

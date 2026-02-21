@@ -1,10 +1,50 @@
-import { portfolioData } from '../data/portfolio';
-import { Mail, Phone, Github, Linkedin, Globe, Printer } from 'lucide-react';
+import { usePortfolio } from '../context/PortfolioContext';
+import { useAuth } from '../context/AuthContext';
+import { Mail, Phone, Github, Linkedin, Globe, Printer, Plus, X } from 'lucide-react';
 
 const Resume = () => {
+    const { data, updateField } = usePortfolio();
+    const { isLoggedIn } = useAuth();
+
     const handlePrint = () => {
         window.print();
     };
+
+    const renderSkillList = (category: string, skills: string[]) => (
+        <p className="flex flex-wrap items-center gap-x-2 gap-y-1">
+            <span className="font-semibold capitalize">{category.replace('_', ' & ')}:</span>
+            {skills.map((skill, i) => (
+                <span key={i} className="group relative flex items-center">
+                    {skill}{i < skills.length - 1 ? "," : ""}
+                    {isLoggedIn && (
+                        <button
+                            onClick={() => {
+                                const newSkills = [...skills];
+                                newSkills.splice(i, 1);
+                                updateField(`resume.skills.${category}`, newSkills);
+                            }}
+                            className="ml-1 text-destructive opacity-0 group-hover:opacity-100 transition-opacity"
+                        >
+                            <X size={12} />
+                        </button>
+                    )}
+                </span>
+            ))}
+            {isLoggedIn && (
+                <button
+                    onClick={() => {
+                        const newSkill = prompt(`Add to ${category}:`);
+                        if (newSkill) {
+                            updateField(`resume.skills.${category}`, [...skills, newSkill]);
+                        }
+                    }}
+                    className="ml-2 text-primary hover:underline text-xs flex items-center gap-1 print:hidden"
+                >
+                    <Plus size={12} /> Add
+                </button>
+            )}
+        </p>
+    );
 
     return (
         <div className="min-h-screen bg-white text-black p-8 md:p-16 print:p-0">
@@ -12,8 +52,8 @@ const Resume = () => {
                 {/* Header */}
                 <header className="border-b-2 border-gray-800 pb-6 mb-8 flex flex-col md:flex-row justify-between items-start gap-4">
                     <div>
-                        <h1 className="text-4xl font-bold uppercase tracking-wide mb-2">{portfolioData.personal.name}</h1>
-                        <p className="text-lg text-gray-600">{portfolioData.personal.location}</p>
+                        <h1 className="text-4xl font-bold uppercase tracking-wide mb-2">{data.personal.name}</h1>
+                        <p className="text-lg text-gray-600">{data.personal.location}</p>
                     </div>
                     <button
                         onClick={handlePrint}
@@ -26,16 +66,16 @@ const Resume = () => {
 
                 {/* Contact Info */}
                 <div className="flex flex-wrap gap-4 mb-8 text-sm">
-                    <a href={`mailto:${portfolioData.personal.social.email}`} className="flex items-center gap-1 hover:underline">
-                        <Mail size={14} /> {portfolioData.personal.social.email}
+                    <a href={`mailto:${data.personal.social.email}`} className="flex items-center gap-1 hover:underline">
+                        <Mail size={14} /> {data.personal.social.email}
                     </a>
                     <span className="flex items-center gap-1">
-                        <Phone size={14} /> {portfolioData.personal.social.phone}
+                        <Phone size={14} /> {data.personal.social.phone}
                     </span>
-                    <a href={portfolioData.personal.social.github} className="flex items-center gap-1 hover:underline">
+                    <a href={data.personal.social.github} className="flex items-center gap-1 hover:underline">
                         <Github size={14} /> GitHub
                     </a>
-                    <a href={portfolioData.personal.social.linkedin} className="flex items-center gap-1 hover:underline">
+                    <a href={data.personal.social.linkedin} className="flex items-center gap-1 hover:underline">
                         <Linkedin size={14} /> LinkedIn
                     </a>
                     <a href="https://avinashrajmalaka.in" className="flex items-center gap-1 hover:underline">
@@ -47,19 +87,19 @@ const Resume = () => {
                 <section className="mb-8">
                     <h2 className="text-xl font-bold uppercase border-b border-gray-300 mb-4 pb-1">About</h2>
                     <p className="text-gray-700 leading-relaxed">
-                        {portfolioData.resume.summary}
+                        {data.resume.summary}
                     </p>
                 </section>
 
                 {/* Skills */}
                 <section className="mb-8">
                     <h2 className="text-xl font-bold uppercase border-b border-gray-300 mb-4 pb-1">Technical Skills</h2>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-y-2 text-sm">
-                        <p><span className="font-semibold">Languages:</span> {portfolioData.resume.skills.languages.join(", ")}</p>
-                        <p><span className="font-semibold">Frameworks:</span> {portfolioData.resume.skills.frameworks.join(", ")}</p>
-                        <p><span className="font-semibold">AI & ML Tools:</span> {portfolioData.resume.skills.ai_ml.join(", ")}</p>
-                        <p><span className="font-semibold">Databases:</span> {portfolioData.resume.skills.databases.join(", ")}</p>
-                        <p><span className="font-semibold">Cloud:</span> {portfolioData.resume.skills.cloud.join(", ")}</p>
+                    <div className="grid grid-cols-1 gap-y-2 text-sm">
+                        {renderSkillList('languages', data.resume.skills.languages)}
+                        {renderSkillList('frameworks', data.resume.skills.frameworks)}
+                        {renderSkillList('ai_ml', data.resume.skills.ai_ml)}
+                        {renderSkillList('databases', data.resume.skills.databases)}
+                        {renderSkillList('cloud', data.resume.skills.cloud)}
                     </div>
                 </section>
 
@@ -67,7 +107,7 @@ const Resume = () => {
                 <section className="mb-8">
                     <h2 className="text-xl font-bold uppercase border-b border-gray-300 mb-4 pb-1">Work Experience</h2>
                     <div className="space-y-6">
-                        {portfolioData.experience.map((exp, index) => (
+                        {data.experience.map((exp: any, index: number) => (
                             <div key={index}>
                                 <div className="flex justify-between items-baseline mb-1">
                                     <h3 className="font-bold text-lg">{exp.role}</h3>
@@ -75,7 +115,7 @@ const Resume = () => {
                                 </div>
                                 <p className="text-gray-800 font-medium mb-2">{exp.company}</p>
                                 <ul className="list-disc list-inside text-gray-700 text-sm space-y-1">
-                                    {exp.achievements.map((achievement, i) => (
+                                    {exp.achievements.map((achievement: string, i: number) => (
                                         <li key={i}>{achievement}</li>
                                     ))}
                                 </ul>
@@ -88,7 +128,7 @@ const Resume = () => {
                 <section className="mb-8">
                     <h2 className="text-xl font-bold uppercase border-b border-gray-300 mb-4 pb-1">Projects</h2>
                     <div className="space-y-4">
-                        {portfolioData.projects.slice(0, 4).map((project, index) => (
+                        {data.projects.slice(0, 4).map((project: any, index: number) => (
                             <div key={index}>
                                 <div className="flex justify-between items-baseline mb-1">
                                     <h3 className="font-bold">{project.title}</h3>
@@ -96,7 +136,7 @@ const Resume = () => {
                                 </div>
                                 <p className="text-sm text-gray-700 mb-1">{project.description}</p>
                                 <ul className="list-disc list-inside text-xs text-gray-600">
-                                    {project.features.slice(0, 2).map((feature, i) => (
+                                    {project.features.slice(0, 2).map((feature: string, i: number) => (
                                         <li key={i}>{feature}</li>
                                     ))}
                                 </ul>
@@ -109,7 +149,7 @@ const Resume = () => {
                 <section className="mb-8">
                     <h2 className="text-xl font-bold uppercase border-b border-gray-300 mb-4 pb-1">Education</h2>
                     <div className="space-y-2">
-                        {portfolioData.education.map((edu, index) => (
+                        {data.education.map((edu: any, index: number) => (
                             <div key={index} className="flex justify-between items-baseline">
                                 <div>
                                     <h3 className="font-bold">{edu.school}</h3>
@@ -120,6 +160,7 @@ const Resume = () => {
                         ))}
                     </div>
                 </section>
+
 
                 {/* Certifications (Hardcoded for now based on input) */}
                 <section>
